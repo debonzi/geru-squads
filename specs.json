@@ -1,0 +1,37 @@
+{
+    'squads': [
+        {
+            'nome': 'Consig',
+            'membros': [
+                {
+                    'nome': 'Ana',
+                    'papel': 'PO'
+                },
+                {
+                    'nome': 'Flávio',
+                    'papel': 'LT'
+                }
+            ],
+            'terceiros': true
+        },
+        {
+            'nome': 'Originação',
+            'membros': [
+                {
+                    'nome': 'Adriana',
+                    'papel': 'PO'
+                },
+                {
+                    'nome': 'Debonzi',
+                    'papel': 'LT'
+                }
+            ],
+            'terceiros': true
+
+        }
+    ]
+    'images': {
+        'LT': 'img_url',
+        'PO': 'img_url'
+    }    
+}
