@@ -6,6 +6,7 @@ from setuptools import setup
 requires = [
     'pyramid',
     'gunicorn',
+    'pymongo',
     ]
 
 extras_require = {
