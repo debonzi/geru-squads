@@ -38,46 +38,49 @@ def org_chart_data1(scope='function'):
     return {
         'squads': [
             {
+                'code': 'consig',
                 'name': 'Consig',
-                'membros': [
+                'members': [
                     {
                         'name': 'Ana',
-                        'papel': 'PO'
+                        'role': 'PO'
                     },
                     {
                         'name': 'Flávio',
-                        'papel': 'LT'
+                        'role': 'LT'
                     }
                 ],
-                'terceiros': True
+                'thirtyparty': True
             },
             {
+                'code': 'originacao',
                 'name': 'Originação',
-                'membros': [
+                'members': [
                     {
                         'name': 'Adriana',
-                        'papel': 'PO'
+                        'role': 'PO'
                     },
                     {
                         'name': 'Debonzi',
-                        'papel': 'LT'
+                        'role': 'LT'
                     }
                 ],
-                'terceiros': True
+                'thirtyparty': True
             },
             {
+                'code': 'datascience',
                 'name': 'Data Science',
-                'membros': [
+                'members': [
                     {
                         'name': 'Karin',
-                        'papel': 'PO'
+                        'role': 'PO'
                     },
                     {
                         'name': 'Chicão',
-                        'papel': 'LT'
+                        'role': 'LT'
                     }
                 ],
-                'terceiros': True
+                'thirtyparty': False
             }
 
         ],
