@@ -1,4 +1,20 @@
 
+# class Member():
+#     def __init__(self, data=None):
+#         if data:
+#             self.name = data['name']
+#             self.role = data['role']
+#         else:
+#             self.name = None
+#             self.role = None
+    
+#     def json(self):
+#         return {
+#             'name': self.name,
+#             'role': self.role
+#         }
+
+
 class Member(object):
     def __init__(self, data=None):
         init_data = {
@@ -23,19 +39,55 @@ class Member(object):
     def role(self, value):
         self._data['role'] = value
 
+    def json(self):
+        return self._data
+
 
 class Squad(object):
-    def __init__(self, data):
-        self._data = data
-        self._members = [Member(member) for member in data['members']]
+    def __init__(self, data=None):
+        init_data = {
+            'name': None,
+            'code': None,
+            'thirtyparty': None,
+            'members': []
+        }
+        self._data = data if data else init_data
+        self._members = [Member(member) for member in self._data['members']]
 
     @property
     def members(self):
         return self._members
 
+    def add_member(self, member):
+        self._members.append(member)
+        self._data['members'].append(member.json())
+
     @property
     def thirtyparty(self):
         return self._data['thirtyparty']
+
+    @thirtyparty.setter
+    def thirtyparty(self, value):
+        self._data['thirtyparty'] = value
+
+    @property
+    def name(self):
+        return self._data['name']
+
+    @name.setter
+    def name(self, value):
+        self._data['name'] = value
+
+    @property
+    def code(self):
+        return self._data['code']
+
+    @code.setter
+    def code(self, value):
+        self._data['code'] = value
+
+    def json(self):
+        return self._data
 
 
 class DataHandler(object):
