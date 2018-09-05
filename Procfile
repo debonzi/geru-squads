@@ -1,1 +1,1 @@
-web: gunicorn --paste live.ini
+web: gunicorn -b :$PORT --paste live.ini
