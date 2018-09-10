@@ -6,7 +6,7 @@ from pyramid import testing  # Pyramid object to create test config
 
 from squads import main  # Our "create application" function
 from squads.storage.mongodb import mongo as mongo_
-
+from squads.storage import SquadsStorage
 
 settings = paster.get_appsettings('testing.ini', name='main')
 config = testing.setUp(settings=settings)
@@ -14,6 +14,10 @@ config = testing.setUp(settings=settings)
 app_ = main(config, **settings)
 mongo_.configure(settings)
 
+
+@pytest.fixture
+def squads_storage(mongodb):
+    return SquadsStorage()
 
 @pytest.fixture(scope='function')
 def mongodb():

@@ -58,3 +58,16 @@ def test_create_org_chart(org_chart_data1):
 
     org_chart = OrganizationChart.create(squads, images_data)
     assert org_chart.json() == org_chart_data1
+
+
+# Integration Tests
+def simple_integration_test(org_chart_data1, squads_storage):
+    squads_data = org_chart_data1['squads']
+    images_data = org_chart_data1['images']
+
+    squads = [Squad(data) for data in squads_data]
+
+    org_chart = OrganizationChart.create(squads, images_data)
+    squads_storage.save(org_chart.json())
+
+    assert squads_storage.latest() == org_chart.json()
