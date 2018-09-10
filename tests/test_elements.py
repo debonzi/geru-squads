@@ -50,3 +50,11 @@ def test_create_squads():
     }
 
 
+def test_create_org_chart(org_chart_data1):
+    squads_data = org_chart_data1['squads']
+    images_data = org_chart_data1['images']
+
+    squads = [Squad(data) for data in squads_data]
+
+    org_chart = OrganizationChart.create(squads, images_data)
+    assert org_chart.json() == org_chart_data1
