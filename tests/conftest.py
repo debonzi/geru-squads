@@ -15,9 +15,15 @@ app_ = main(config, **settings)
 mongo_.configure(settings)
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def squads_storage(mongodb):
     return SquadsStorage()
+
+@pytest.fixture(scope='function')
+def populated_storage(squads_storage, org_chart_data1):
+    squads_storage.save(org_chart_data1)
+    return squads_storage.latest()
+
 
 @pytest.fixture(scope='function')
 def mongodb():
