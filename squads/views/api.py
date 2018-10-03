@@ -26,19 +26,73 @@ class OrgChartViews:
         return self.org_chart.json()
 
 
-    @view_config(route_name='squads')
+    @view_config(route_name='squads', request_method='GET')
     def get_squads(self):
         return [s.json() for s in self.org_chart.squads]
 
-    @view_config(route_name='squad')
+    @view_config(route_name='squads', request_method='POST')
+    def post_squads(self):
+        """
+        {
+            "code": <slug>,
+            "name": <squad name>
+            "thirtyparty": True|False
+        }
+        """
+        code = self.request.json['code']
+        name = self.request.json['name']
+        thirtyparty = self.request.json['thirtyparty']
+
+        # Create a new squad
+        squad = Squad()
+        squad.code = code
+        squad.name = name
+        squad.thirtyparty = thirtyparty
+
+        # if hasattr(self.org_chart.squads, code):
+        #     self.request.response.status_code = 409
+        #     return {}
+
+        # Add squad to the current organization chart
+        self.org_chart.add_squad(squad)
+
+        # Save the new organization chart
+        squads_storage.save(self.org_chart.json())
+
+        # Change result code to created (201)
+        self.request.response.status_code = 201
+        
+        # Return created squad
+        return squad.json()
+
+    @view_config(route_name='squad', request_method='GET')
     def get_squad(self):
         squad = self._get_squad_or_404()
         return squad.json()
 
-    @view_config(route_name='members')
+    @view_config(route_name='squad', request_method='PUT')
+    def put_squad(self):
+        """
+        {
+            "thirtyparty": True|False
+        }
+        """
+        squad = self._get_squad_or_404()
+        thirtyparty = self.request.json['thirtyparty']
+
+        squad.thirtyparty = thirtyparty
+        squads_storage.save(self.org_chart.json())
+
+        return squad.json()
+
+    @view_config(route_name='members', request_method='GET')
     def get_members(self):
         squad = self._get_squad_or_404()
         return [m.json() for m in squad.members]
+
+    @view_config(route_name='members', request_method='POST')
+    def post_members(self):
+        return []
 
     @view_config(route_name='member')
     def get_member(self):
