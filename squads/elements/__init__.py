@@ -130,3 +130,7 @@ class OrganizationChart(object):
     @property
     def squads(self):
         return self._squads
+
+    @property
+    def images(self):
+        return self._images

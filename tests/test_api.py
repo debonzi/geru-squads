@@ -84,7 +84,59 @@ def test_create_member(testapp, mongodb):
         'name': 'Adriana',
         'role': 'PO'
     }
-    
+
     resp = testapp.post_json('/api/v1/squads/consig/members', data)
     assert resp.status_code == 201
     assert resp.json == data
+
+def test_create_member_bad_json(testapp, mongodb):
+    data = {
+        "code": "consig" ,
+        "name": "Geru Consignado",
+        "thirtyparty": True
+    }
+
+    resp = testapp.post_json('/api/v1/squads', data)
+
+    data = {
+        'nam': 'Adriana',
+        'bla': 'PO'
+    }
+
+    resp = testapp.post_json('/api/v1/squads/consig/members', data, status=400)
+    assert resp.status_code == 400
+
+
+def test_get_images(testapp, mongodb, populated_storage):
+    resp = testapp.get('/api/v1/images')
+    assert resp.status_code == 200
+    assert resp.json == {
+        'LT': 'img_url',
+        'PO': 'img_url'
+    }
+
+
+def test_put_image(testapp, mongodb):
+    images_data = {
+        'PO': 'po_url',
+        'LT': 'lt_url'
+    }
+    resp = testapp.put_json('/api/v1/images', images_data)
+    assert resp.status_code == 200
+    assert resp.json == images_data
+    assert testapp.get('/api/v1/images').json == images_data
+
+def test_change_image(testapp, mongodb, populated_storage):
+    images_data = {
+        'PO': 'po_url'
+    }
+    resp = testapp.put_json('/api/v1/images', images_data)
+    get_resp = testapp.get('/api/v1/images')
+
+    assert resp.status_code == 200
+    assert resp.json != images_data
+    assert testapp.get('/api/v1/images').json != images_data
+    assert get_resp.json == {
+        'PO': 'po_url',
+        'LT': 'img_url'
+    }

@@ -3,7 +3,8 @@ from pyramid.view import view_config, view_defaults
 
 from squads.elements import (
     OrganizationChart,
-    Squad
+    Squad,
+    Member
 )
 from squads.storage import squads_storage
 
@@ -61,7 +62,7 @@ class OrgChartViews:
 
         # Change result code to created (201)
         self.request.response.status_code = 201
-        
+
         # Return created squad
         return squad.json()
 
@@ -92,7 +93,17 @@ class OrgChartViews:
 
     @view_config(route_name='members', request_method='POST')
     def post_members(self):
-        return []
+        squad = self._get_squad_or_404()
+        _json = self.request.json
+        if 'name' not in _json or 'role' not in _json:
+            raise httpexceptions.HTTPBadRequest()
+        member = Member(_json)
+        squad.add_member(member)
+
+        squads_storage.save(self.org_chart.json())
+
+        self.request.response.status_code = 201
+        return member.json()
 
     @view_config(route_name='member')
     def get_member(self):
@@ -105,3 +116,16 @@ class OrgChartViews:
         except ValueError:
             raise httpexceptions.HTTPBadRequest()
         return member.json()
+
+    @view_config(route_name='images', request_method='GET')
+    def get_images(self):
+        return self.org_chart.images
+
+    @view_config(route_name='images', request_method='PUT')
+    def put_images(self):
+        for role, path in self.request.json.items():
+            self.org_chart.add_image(role, path)
+
+        squads_storage.save(self.org_chart.json())
+
+        return self.org_chart.images
