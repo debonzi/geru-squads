@@ -1,20 +1,3 @@
-
-# class Member():
-#     def __init__(self, data=None):
-#         if data:
-#             self.name = data['name']
-#             self.role = data['role']
-#         else:
-#             self.name = None
-#             self.role = None
-    
-#     def json(self):
-#         return {
-#             'name': self.name,
-#             'role': self.role
-#         }
-
-
 class Member(object):
     def __init__(self, data=None):
         init_data = {
@@ -104,22 +87,50 @@ class DataHandler(object):
             return self._data[item]
         raise Exception('Item not found')
 
+    def __iter__(self):
+        for _, squad in self._data.items():
+            yield squad
 
 
 class OrganizationChart(object):
-    def __init__(self, data):
-        self._data = data
+    def __init__(self, data={}):
         self._squads = DataHandler({})
-        self._deserialize()
+        self._images = data.get('images', {})
+        self._deserialize(data)
 
-    def _deserialize(self):
-        squads = self._data['squads']
+    @classmethod
+    def create(cls, squads, images={}):
+        org_char = cls()
         for s in squads:
-            self._squads.add(s['code'], Squad(s))
+            org_char.add_squad(s)
+        for iname, ipath in images.items():
+            org_char.add_image(iname, ipath)
+        return org_char
+
+    def _deserialize(self, data):
+        squads = data.get('squads', [])
+        for s in squads:
+            self.add_squad(s)
 
     def json(self):
-        return self._data
+        return {
+            'squads': [s.json() for s in self._squads],
+            'images': self._images
+        }
+
+    def add_squad(self, squad):
+        if isinstance(squad, Squad):
+            self._squads.add(squad.code, squad)
+        else:
+            self._squads.add(squad['code'], Squad(squad))
+
+    def add_image(self, role, path):
+        self._images[role] = path
 
     @property
     def squads(self):
         return self._squads
+
+    @property
+    def images(self):
+        return self._images
